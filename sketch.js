@@ -62,7 +62,7 @@ function setup() {
   canvas = createCanvas(window.innerWidth, 642);
   canvas.parent('haptic')
 
-  sound.loop();
+  //sound.loop();
   sound.pause();
 
   // create a new Amplitude analyzer
@@ -126,7 +126,7 @@ function draw() {
   }
   var ampAvg = total / ampArray.length;
 
-  var theta = map(ampAvg, 0, 1, 90, 315);
+  var theta = map(ampAvg, 0, .9, 90, 360, true);
   rotate(theta);
   stroke('rgba(255,255,255,1)');
   strokeWeight(2);

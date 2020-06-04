@@ -2,7 +2,8 @@ let song, analyzer;
 let r, g, b;
 let fft, button, canvas, container;
 let fadeTimer;
-var divisions, range, maxRad;
+let ampArray = [];
+let divisions, range, maxRad;
 
 function preload() {
   sound = loadSound('/audio/DBX.wav');
@@ -15,7 +16,7 @@ function buttonDown(){
   clearTimeout(fadeTimer);
   
   if(!sound.isPlaying()){
-      //Stop duplicate tracks playing
+    //Stop duplicate tracks playing
     sound.play()
   }
   sound.setVolume(1, 1)
@@ -41,10 +42,14 @@ function setup() {
   container = document.getElementById('haptic');
   button = document.getElementById('hapticPlay');
 
+  //Number of  lines to draw
   divisions = 180;
+  //Range of frequency to analyze (Max 24000)
   range = 20000 / divisions;
+  //Maximum length of outward radiating lines
   maxRad = 200;
 
+  smooth(1)
 
   button.addEventListener('mousedown', e => {
     buttonDown()
@@ -72,37 +77,36 @@ function setup() {
   frameRate(20);
   angleMode(DEGREES)  
 
+  //Prevent the draw loop from running the whole time
   noLoop();
 }
 
 function draw() {
+  //Clear the previous frame
   clear();
-
-  // Get the average (root mean square) amplitude
-  fill(255, 255, 255, 100);
-
+  //Starts the analyzer on the sound. 
   let spectrum = fft.analyze();  
 
   translate (width / 2, height / 2);
   rotate(45);
   for (var i = 0; i < divisions; i++){
-    //var bottom = Math.floor(i * (16000/points)) + 1;
-    //var top = (i+1) * Math.floor((16000/points));
-    //var amp = fft.getEnergy(bottom, top);
+
+    //Calculate the amplitude for a frequency range
     var bottom = Math.floor(range * i) + 1
     var top =  Math.floor(range * (i+1))
-
-
     var amp = fft.getEnergy(bottom, top);
-
+    
+    // r is distance to radiate from center, based on amplitude of that range.
     var r = map(amp, 0, 255, 0, maxRad);
+    
+    //Space out the lines
     rotate( (270 / divisions) );
     strokeWeight(1);
-    // Draw the red lines
-
+    
+    // Draw white lines as base
     stroke('rgba(255,255,255,0.4)');
     line( 0, 116, 0, 120 + r );
-
+    // Draw the red lines
     var red = map(i, 0, divisions, 0 , 1);
     stroke('rgba(255, 0, 0, '+red+')');
     line( 0, 116, 0, 120 + r );
@@ -110,8 +114,19 @@ function draw() {
 
   //Draw the tachometer bar
   var power = analyzer.getLevel();
-  console.log(power)
-  var theta = map(power, 0, 1, 90, 315);
+
+  //Average power over 15 or so frames to smooth the motion of the tachometer bar.
+  var total = 0;
+  ampArray.push(power);
+  if(ampArray.length > 15){
+    ampArray.shift()
+  }
+  for(var i = 0; i < ampArray.length; i++) {
+    total += ampArray[i];
+  }
+  var ampAvg = total / ampArray.length;
+
+  var theta = map(ampAvg, 0, 1, 90, 315);
   rotate(theta);
   stroke('rgba(255,255,255,1)');
   strokeWeight(2);

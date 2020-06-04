@@ -55,7 +55,7 @@ function setup() {
     buttonDown()
   });
 
-  window.addEventListener('mouseup', e => {
+  document.addEventListener('mouseup', e => {
     buttonUp();
   });
   

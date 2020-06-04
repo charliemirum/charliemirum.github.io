@@ -5,7 +5,7 @@ let fadeTimer;
 var divisions, range, maxRad;
 
 function preload() {
-  sound = loadSound('songtest.mp3');
+  sound = loadSound('/audio/DBX.wav');
 }
 
 function buttonDown(){
@@ -31,7 +31,7 @@ function buttonUp(){
       container.className = "";
       //stop canvas draw function and clear it.
       noLoop();
-    }, 1200)
+    }, 1800)
   }
 }
 

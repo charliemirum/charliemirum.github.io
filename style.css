@@ -26,6 +26,14 @@ canvas {
   justify-content: center;
 }
 
+#haptic::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 642px;
+  backdrop-filter: blur(0px);
+  transition: all 400ms;
+}
 
 #haptic button {
   width: 80px;
@@ -37,15 +45,8 @@ canvas {
   backdrop-filter: blur(40px);
   outline: none;
   z-index: 100;
+  transition: all 400ms;
 }
-
-/* .tacho {
-  position: absolute;
-  z-index: 1;
-  stroke-width: 12;
-  background: conic-gradient(red, orange, yellow, green, blue);
-} 
-*/
 
 #tacho::before {
   content: "";
@@ -92,9 +93,14 @@ label {
 }
 
 canvas {
-  opacity: 1;
+  opacity: 0;
   transition: all 400ms;
 }
+#tacho {
+  opacity: 0;
+  transition: all 400ms;
+}
+
 
 .soundwave {
   stroke: #F7F8F4;
@@ -106,6 +112,9 @@ canvas {
   animation: buttonDown 100ms infinite alternate-reverse;
 }
 
+.soundOn #tacho {
+  opacity: 1;
+}
 
 .soundOn label {
   opacity: 0;
@@ -115,6 +124,15 @@ canvas {
   opacity: 1;
 }
 
+
+#haptic.soundOn::before {
+  backdrop-filter: blur(20px);
+}
+
+#haptic.soundOn button {
+  background-color: rgba(22, 26, 33, 0);
+  backdrop-filter: blur(0px);
+}
 
 @keyframes buttonDown {
   0% { d: path("M0 17.4999C2 17.4999 2.8 17.4999 6.3 17.4999C8.8 17.4999 7 9.7999 9.4 9.7999C12.4 9.7999 9.4 27.5 12.5 27.5C15.4 27.5 13.5 1.5 15.6 1.5C18.4 1.5 16.6 33.3999 19 33.3999C21.4 33.3999 20 5 21.8 5C23.6 5 22.8 22.3999 24.9 22.3999C27 22.3999 25.7 11.7999 27.5 11.7999C29.3 11.7999 27.5 17.4999 31 17.4999C34.5 17.4999 36 17.4999 36 17.4999"); }
